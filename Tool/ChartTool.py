@@ -264,7 +264,7 @@ def geo():
         for p in place_avaliable:
             if k == p["NAME"]:
                 if not p.get("MAX_NUM"):
-                    data_pairs.append(0)
+                    data_pairs.append(0.0)
                 else:
                     data_pairs.append(round(int(p["NUM"])/int(p["MAX_NUM"]), 2))
                 break
@@ -278,6 +278,7 @@ def geo():
             data_pairs.append(0)
         else:
             data_pairs.append(round(int(item["NUM"]) / int(item["MAX_NUM"]), 2))
+        data_pairs = tuple(data_pairs)
         coordinates.append(data_pairs)
 
     # 定义数据对，
@@ -287,7 +288,6 @@ def geo():
     #     ('湖南省长沙市长沙县黄花镇新塘铺长沙黄花国际机场', 20)
     # ]
     data_pair = coordinates
-
     # Geo 图类型，有 scatter, effectScatter, heatmap, lines 4 种，建议使用
     # from pyecharts.globals import GeoType
     # GeoType.GeoType.EFFECT_SCATTER，GeoType.HEATMAP，GeoType.LINES
