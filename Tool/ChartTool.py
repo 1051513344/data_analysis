@@ -321,7 +321,7 @@ def pie_set_colors(place="上海野生动物园") -> Pie:
     data = passenger_spider(place)
     c = (
         Pie(init_opts=opts.InitOpts(width="100%", height="100%"))
-        .add("", [("景区客流", data["NUM"]), ("景区容量", data["MAX_NUM"])])
+        .add("", [("景区客流", data["NUM"]), ("景区容量", data["MAX_NUM"] - data["NUM"])])
         .set_colors(["#FF6347", "orange"])
         .set_global_opts(title_opts=opts.TitleOpts(title=data["NAME"], title_textstyle_opts=opts.TextStyleOpts(color="white", font_size=15)), legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")))
         .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}"))

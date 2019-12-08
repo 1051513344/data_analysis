@@ -126,7 +126,7 @@
             {"place":params.currentTarget.textContent},
             function (data) {
                 if(data.chart1 == "no_weather"){
-                    $("#arightboxbott").html("<h1>暂无天气数据</h1>");
+                    $("#arightboxbott").html("<h1>暂无天气数据</h1><a style='color: white' onclick='getShanghaiWeather()' href='javascript:void(0)'>显示上海七天气温走势</a>");
                 }else {
                     $("#arightboxbott").html(data.chart1);
                 }
@@ -134,8 +134,15 @@
                 $("#amiddboxtbott1").html(data.chart2);
             }
         )
-    })
-
+    });
+    function getShanghaiWeather() {
+        $.get(
+            "/getShanghaiWeather",
+            function (data) {
+                $("#arightboxbott").html(data.chart1);
+            }
+        );
+    }
 </script>
 <script>
     $(function () {

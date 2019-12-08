@@ -1,8 +1,7 @@
 import re
 
 from flask import Flask, render_template, jsonify, request
-from Tool import ChartTool
-
+from Tool import ChartTool, ShanghaiWeather
 app = Flask(__name__)
 
 
@@ -22,6 +21,12 @@ def getChart():
     data = {}
     data["chart1"] = ChartTool.line_color_with_js_func().render_embed()
     data["chart2"] = ChartTool.pie_set_colors().render_embed()
+    return jsonify(data)
+
+@app.route('/getShanghaiWeather')
+def getShanghaiWeather():
+    data = {}
+    data["chart1"] = ShanghaiWeather.line_color_with_js_func_shanghai().render_embed()
     return jsonify(data)
 
 @app.route('/getChartByPlace', methods=['POST'])
