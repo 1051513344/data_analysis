@@ -9,13 +9,15 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
+# 网站主页
+
 @app.route('/index')
 def index():
     shanghai_map = ChartTool.geo()
     return render_template("index.html",
                            chart=shanghai_map.render_embed()
                            )
-
+# 获取天气预报和客流量占比图
 @app.route('/getChart')
 def getChart():
     data = {}
@@ -23,12 +25,15 @@ def getChart():
     data["chart2"] = ChartTool.pie_set_colors().render_embed()
     return jsonify(data)
 
+# 获取上海天气
+
 @app.route('/getShanghaiWeather')
 def getShanghaiWeather():
     data = {}
     data["chart1"] = ShanghaiWeather.line_color_with_js_func_shanghai().render_embed()
     return jsonify(data)
 
+# 根据地点获取天气预报图和客流量占比饼图
 @app.route('/getChartByPlace', methods=['POST'])
 def getChartByPlace():
     data = {}

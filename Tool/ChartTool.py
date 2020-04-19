@@ -268,13 +268,15 @@ def geo():
                 else:
                     data_pairs.append(round(int(p["NUM"])/int(p["MAX_NUM"]), 2))
                 break
+        if len(data_pairs) == 1:
+            data_pairs.append(0.0)
         data_pairs = tuple(data_pairs)
         coordinates.append(data_pairs)
 
     for item in place_no_weather:
         data_pairs = []
         data_pairs.append(item["NAME"])
-        if not item["MAX_NUM"]:
+        if (not item["MAX_NUM"]) or (item["MAX_NUM"] == ""):
             data_pairs.append(0)
         else:
             data_pairs.append(round(int(item["NUM"]) / int(item["MAX_NUM"]), 2))
