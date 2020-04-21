@@ -248,7 +248,7 @@ def line_color_with_js_func(place="上海野生动物园") -> Line:
 def geo():
     place_avaliable = passenger_spider(None, all=True)
     place_no_weather = passenger_spider_no_weather()
-    city = '上海'
+    city = 'china'
     g = Geo(init_opts=opts.InitOpts(width="100%", height="100%", bg_color="#12406d"))
     g.add_schema(maptype=city, itemstyle_opts=opts.ItemStyleOpts(color="#135dbe", border_color="#fff"), zoom=1.2)
     # 定义坐标对应的名称，添加到坐标库中 add_coordinate(name, lng, lat)
