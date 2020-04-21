@@ -1,7 +1,6 @@
-import re
-
 from flask import Flask, render_template
-from Tool import ChartTool
+from Tool import ChartTool,Analysis
+import os
 app = Flask(__name__)
 
 
@@ -9,13 +8,13 @@ app = Flask(__name__)
 # 网站主页
 @app.route('/')
 def index():
-    shanghai_map = ChartTool.geo()
+    project_path = os.path.dirname(os.path.abspath(__file__))
+    china_map = ChartTool.geo()
+    chart1 = Analysis.province_rt(project_path)
     return render_template("index.html",
-                           chart=shanghai_map.render_embed()
+                           map=china_map.render_embed(),
+                           chart1=chart1.render().render_embed()
                            )
-
-
-
 
 
 if __name__ == '__main__':
