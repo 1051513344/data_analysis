@@ -20,44 +20,12 @@
 <div class="left1">
     <div class="aleftboxttop pt1"><h2 class="tith2">进州车辆情况</h2>
     <div class="lefttoday_tit" style=" height:8%"><p class="fl">地区：甘孜</p><p class="fm">周期：每日</p><p class="fr">2018-06-14</p></div>
-      <div class="tlbox">
-        <ul>
-           <li>
-             <p class="text"><span class="w12">本地车辆:</span><span><i class="ricon1"></i>昨日:6</span><span><i class="tricon1"></i>今日:5</span><span class="tr"><img src="{{ url_for('static',filename="img/icondown.png") }}" height="16" /> 1</span></p>
-             <p class="rwith"><span class="rwith_img" style="width:60%"></span></p>
-           </li>
-         <li>
-           <p class="text"><span class="w12">外地车辆:</span><span><i class="ricon2"></i>昨日:600</span><span><i class="tricon2"></i>今日:500</span><span class="tr"><img src="{{ url_for('static',filename="img/iconup.png") }}" height="16" /> 1</span></p>
-           <p class="rwith bgc2"><span class="rwith_img qgc2" style="width:40%"></span></p>
-         </li>
-       <li>
-         <p class="text"><span class="w12">乘客人员数量:</span><span><i class="ricon3"></i>昨日:6</span><span><i class="tricon3"></i>今日:5</span><span class="tr"><img src="{{ url_for('static',filename="img/iconup.png") }}" height="16" /> 1</span></p>
-         <p class="rwith bgc3"><span class="rwith_img qgc3" style="width:50%"></span></p>
-       </li>
-        </ul>
-      </div>
-
     <!-- lefttoday_number end -->
     </div>
     <div class="aleftboxtmidd">
       <h2 class="tith2 pt2">出州车辆情况</h2>
       <div class="lefttoday_tit" style=" height:8%"><p class="fl">地区：甘孜</p><p class="fm">周期：每日</p><p class="fr">2018-06-14</p></div>
-        <div class="tlbox">
-          <ul>
-             <li>
-               <p class="text"><span class="w12">本地车辆:</span><span><i class="ricon1"></i>昨日:6</span><span><i class="tricon1"></i>今日:5</span><span class="tr"><img src="{{ url_for('static',filename="img/icondown.png") }}" height="16" /> 1</span></p>
-               <p class="rwith"><span class="rwith_img" style="width:60%"></span></p>
-             </li>
-           <li>
-             <p class="text"><span class="w12">外地车辆:</span><span><i class="ricon2"></i>昨日:600</span><span><i class="tricon2"></i>今日:500</span><span class="tr"><img src="{{ url_for('static',filename="img/iconup.png") }}" height="16" /> 1</span></p>
-             <p class="rwith bgc2"><span class="rwith_img qgc2" style="width:40%"></span></p>
-           </li>
-         <li>
-           <p class="text"><span class="w12">乘客人员数量:</span><span><i class="ricon3"></i>昨日:6</span><span><i class="tricon3"></i>今日:5</span><span class="tr"><img src="{{ url_for('static',filename="img/iconup.png") }}" height="16" /> 1</span></p>
-           <p class="rwith bgc3"><span class="rwith_img qgc3" style="width:50%"></span></p>
-         </li>
-          </ul>
-        </div>
+
   </div>
   <div class="aleftboxtbott">
     <h2 class="tith2">总体驾驶人统计</h2>
@@ -105,59 +73,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script>
-
-    function setDate(){
-       //获取当前时间
-       var date = new Date();//格式化为本地时间格式
-       var date1 = date.toLocaleString();
-       //获取div
-       var div1 = document.getElementById("timer");
-        //将时间写入div
-        div1.innerHTML = date1;
-    }
-
-
-    let charts = $(".chart-container");
-    charts.eq(0).on("click",function (params) {
-        console.log(params.currentTarget.textContent);
-        $.post(
-            "/getChartByPlace",
-            {"place":params.currentTarget.textContent},
-            function (data) {
-                if(data.chart1 == "no_weather"){
-                    $("#arightboxbott").html("<h1>暂无天气数据</h1><a style='color: white' onclick='getShanghaiWeather()' href='javascript:void(0)'>显示上海七天气温走势</a>");
-                }else {
-                    $("#arightboxbott").html(data.chart1);
-                }
-                setDate();
-                $("#amiddboxtbott1").html(data.chart2);
-            }
-        )
-    });
-    function getShanghaiWeather() {
-        $.get(
-            "/getShanghaiWeather",
-            function (data) {
-                $("#arightboxbott").html(data.chart1);
-            }
-        );
-    }
-</script>
-<script>
-    $(function () {
-        $.get(
-            "/getChart",
-            function (data) {
-                setDate();
-                $("#arightboxbott").html(data.chart1);
-                $("#amiddboxtbott1").html(data.chart2);
-            }
-        );
-
-    });
-</script>
-
 
 </body>
 </html>
