@@ -12,10 +12,13 @@ def index():
     project_path = os.path.dirname(os.path.abspath(__file__))
     china_map = ChartTool.geo()
     chart1 = Analysis.province_rt2(project_path)
-
+    chart2 = Analysis.province_rt3(project_path)
+    city = "上海"
     return render_template("index.html",
                            map=china_map.render_embed(),
-                           chart1=chart1.render().render_embed()
+                           chart1=chart1.render().render_embed(),
+                           city=city,
+                           chart2=chart2.render(city).render_embed()
                            )
 
 
