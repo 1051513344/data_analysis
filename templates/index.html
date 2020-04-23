@@ -32,9 +32,9 @@
             <!--  amiddboxttop end-->
                 <div class="amidd_bott">
                   <div class="amiddboxtbott1 fl" >
-                    <h2 class="tith2 pt1">{{ city }}xx节前后降水与温度</h2>
+                    <h2 class="tith2 pt1" id="chart1_title">{{ city }}xx节前后降水与温度</h2>
                       <div class="lefttoday_tit"><p class="fr" id="timer"></p></div>
-                    <div id="amiddboxtbott1" class="amiddboxtbott1content2" >{{ chart2 | safe }}</div>
+                    <div id="chart1" class="amiddboxtbott1content2" >{{ chart2 | safe }}</div>
                   </div>
 
                 <div class="amiddboxtbott2 fl"><h2 class="tith2 pt1">景区七天气温走势</h2>
@@ -60,6 +60,19 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
+<script>
+    let charts = $(".chart-container");
+    charts.eq(0).on("click",function (params) {
+        console.log(params.currentTarget.textContent);
+        $.post(
+            "/getChartByCity",
+            {"city":params.currentTarget.textContent},
+            function (data) {
+                $("#chart1_title").html(data.city);
+                $("#chart1").html(data.chart);
+            }
+        )
+    });
+</script>
 </body>
 </html>
