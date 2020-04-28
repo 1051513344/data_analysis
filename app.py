@@ -13,12 +13,14 @@ def index():
     china_map = ChartTool.geo()
     chart1 = Analysis.province_rt2(project_path)
     chart2 = Analysis.province_rt3(project_path)
+    chart3 = Analysis.province_p1(project_path)
     city = "上海"
     return render_template("index.html",
                            map=china_map.render_embed(),
                            chart1=chart1.render().render_embed(),
                            city=city,
-                           chart2=chart2.render(city).render_embed()
+                           chart2=chart2.render(city).render_embed(),
+                           chart3=chart3.render(city).render_embed()
                            )
 
 

@@ -1,5 +1,5 @@
 from pyecharts import options as opts
-from pyecharts.charts import PictorialBar, Line, Bar
+from pyecharts.charts import PictorialBar, Line, Bar, Pie
 from pyecharts.globals import SymbolType
 import pandas as pd
 from pyecharts.commons.utils import JsCode
@@ -286,4 +286,27 @@ class province_rt3:
 
         return line
 
+
+class province_p1:
+
+    def __init__(self, csv_path):
+
+        self.passenger = pd.read_csv('{}/data/passenger_flow.csv'.format(csv_path)).set_index("城市")  # 读取省会信息
+
+
+    def render(self, city):
+
+        pie = Pie(init_opts=opts.InitOpts(width="100%", height="100%"))
+        pie.add("",
+                [
+                    ("景区客流", self.passenger["周四（12日）"][city]),
+                    ("景区容量", round(1-(self.passenger["周四（12日）"][city]), 2))
+                ]
+        )
+        pie.set_colors(["#FF6347", "orange"])
+        pie.set_global_opts(title_opts=opts.TitleOpts(title=city,
+                            title_textstyle_opts=opts.TextStyleOpts(color="white",font_size=15)),
+                            legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")))
+        pie.set_series_opts(label_opts=opts.LabelOpts(formatter="{b}"))
+        return pie
 
