@@ -1,0 +1,20 @@
+
+
+.btn {
+  color: #87CEFA;
+  text-decoration: none;
+  border: 1px solid rgb(146, 148, 248);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.btn:hover {
+  box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
+}
+
+
+
+.btn:hover:before {
+  left: 100%;
+}
