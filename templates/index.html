@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <title>假期出游因素分析</title>
 <link href="{{ url_for('static',filename="css/style.css") }}"  rel="stylesheet" type="text/css" media="all" />
+<link href="{{ url_for('static',filename="css/button.css") }}"  rel="stylesheet" type="text/css" />
 
 <body>
 <div class="wpbox">
@@ -25,20 +26,30 @@
       <div class="mrbox_topmidd" style="width: 69%;">
           <div class="amiddboxttop">
               <h2 class="tith2 pt1">中国省会城市地图</h2>
-                <div class="hot_map" id="topmap"   >
-                    {{ map | safe }}
+                <div class="hot_map" id="topmap">
+                    <a onclick="getMapOne()" class="btn">降水分布图</a>&nbsp;&nbsp;
+                    <a onclick="getMapTwo()" class="btn">温度分布图</a>
+                    <span id="china_map">
+                        {{ map | safe }}
+                    </span>
                 </div>
             </div>
             <!--  amiddboxttop end-->
                 <div class="amidd_bott">
                   <div class="amiddboxtbott1 fl" >
-                    <h2 class="tith2 pt1" id="chart1_title">{{ city }}xx节前后降水与温度</h2>
+                    <h2 class="tith2 pt1" id="chart2_title">{{ city }}xx节前后降水与温度</h2>
                       <div class="lefttoday_tit"><p class="fr" id="timer"></p></div>
-                    <div id="chart1" class="amiddboxtbott1content2" >{{ chart2 | safe }}</div>
+                    <div id="chart2" class="amiddboxtbott1content2" >{{ chart2 | safe }}</div>
                   </div>
 
                 <div class="amiddboxtbott2 fl"><h2 class="tith2 pt1">景区客流情况</h2>
-                    <div id="arightboxbott" class="amiddboxtbott2content">{{ chart3 | safe }}</div>
+                    <div id="arightboxbott" class="amiddboxtbott2content">
+                        {% for day in days[:4] %}<a onclick="changeChart3Day('{{ day }}')" class="btn">{{ day }}</a>{% endfor %}<br/>
+                        {% for day in days[4:] %}<a onclick="changeChart3Day('{{ day }}')" class="btn">{{ day }}</a>{% endfor %}
+                        <span id="chart3">
+                            {{ chart3 | safe }}
+                        </span>
+                    </div>
                 </div>
             </div>
             <!-- amidd_bott end -->
@@ -61,18 +72,53 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
+
+    var city = "上海";
+
     let charts = $(".chart-container");
     charts.eq(0).on("click",function (params) {
-        console.log(params.currentTarget.textContent);
+
+        city = params.currentTarget.textContent.split(" : ")[0];
+
         $.post(
-            "/getChartByCity",
-            {"city":params.currentTarget.textContent},
+            "/getChart2ByCity",
+            {"city":city},
             function (data) {
-                $("#chart1_title").html(data.city);
-                $("#chart1").html(data.chart);
+                $("#chart2_title").html(data.city);
+                $("#chart2").html(data.chart);
+                $("#chart3").html(data.chart3);
             }
         )
     });
+
+    function changeChart3Day(day) {
+        $.post(
+            "/getChart3ByCity",
+            {"city":city, "day":day},
+            function (data) {
+                $("#chart3").html(data.chart);
+            }
+        )
+    }
+
+    function getMapOne() {
+        $.post(
+            "/getMapOne",
+            function (data) {
+                $("#china_map").html(data.chart);
+            }
+        )
+    }
+
+    function getMapTwo() {
+        $.post(
+            "/getMapTwo",
+            function (data) {
+                $("#china_map").html(data.chart);
+            }
+        )
+    }
+
 </script>
 </body>
 </html>

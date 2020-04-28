@@ -15,7 +15,7 @@ def geo():
     for i, j in zip(province_distribution.keys(), province_distribution.values()):
         data_pair.append(tuple([i, j]))
     city = 'china'
-    g = Geo(init_opts=opts.InitOpts(width="100%", height="100%", bg_color="#12406d"))
+    g = Geo(init_opts=opts.InitOpts(width="100%", height="92%", bg_color="#12406d"))
     g.add_schema(
         maptype=city,
         itemstyle_opts=opts.ItemStyleOpts(color="#135dbe", border_color="#fff"),
