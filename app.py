@@ -14,9 +14,11 @@ def index():
     chart1 = Analysis.province_rt2(project_path)
     chart2 = Analysis.province_rt3(project_path)
     chart3 = Analysis.province_p(project_path)
+    score = Analysis.province_scroe(project_path)
     city = "上海"
     return render_template("index.html",
                            city=city,
+                           scroe=score.get_score(city),
                            map=china_map.render_embed(),
                            chart1=chart1.render().render_embed(),
                            chart2=chart2.render(city).render_embed(),
@@ -31,8 +33,10 @@ def getChartByCity():
     city = request.form["city"]
     chart = Analysis.province_rt3(project_path)
     chart3 = Analysis.province_p(project_path)
+    score = Analysis.province_scroe(project_path)
     data = {}
     data["city"] = city + "中秋节前后降水与温度"
+    data["score"] = score.get_score(city)
     data["chart"] = chart.render(city).render_embed()
     data["chart3"] = chart3.render(city).render_embed()
     return jsonify(data)

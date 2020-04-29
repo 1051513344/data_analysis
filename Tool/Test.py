@@ -30,16 +30,25 @@
 #     writer.writerows(data)
 
 
-import pandas as pd
+import random
+import unicodecsv as ucsv
 
-data = pd.read_csv("../data/passenger_flow.csv")
-data = data.set_index("城市")
+province_list = [
+    '河南','北京','河北','辽宁','江西','上海','安徽','江苏','湖南','浙江',
+    '海南','广东','湖北','黑龙江','澳门','陕西','四川','内蒙古','重庆','云南',
+    '贵州','吉林','山西','山东','福建','青海','天津'
+]
+data = []
 
-print(data)
+with open('../data/score.csv', 'wb') as f:
+    # 实例化csv写数据对象
+    writer = ucsv.writer(f, encoding='utf-8')
+    data.append(("城市", "分数"))
+    for province in province_list:
+        random_score =str(random.randint(50, 100))
+        data.append((province, random_score))
 
-
-
-
+    writer.writerows(data)
 
 
 

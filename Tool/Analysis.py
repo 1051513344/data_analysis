@@ -390,12 +390,15 @@ class province_hm1:
         geo.add(
             "降水分布图",
             [list(z) for z in zip(provincial_list, weather_data_list)],
-            type_=ChartType.HEATMAP
+            type_=ChartType.HEATMAP,
+            color="#006400"
         )
         geo.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
         geo.set_global_opts(
+            legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
             visualmap_opts=opts.VisualMapOpts(range_color=['#7FFFAA', '#006400']),
-            title_opts=opts.TitleOpts(title="Geo-HeatMap"),
+            title_opts=opts.TitleOpts(title="降水分布图",
+                                      title_textstyle_opts=opts.TextStyleOpts(color="white")),
         )
 
         return geo
@@ -457,9 +460,23 @@ class province_hm2:
         )
         geo.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
         geo.set_global_opts(
+            legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
             visualmap_opts=opts.VisualMapOpts(max_=30),
-            title_opts=opts.TitleOpts(title="Geo-HeatMap"),
+            title_opts=opts.TitleOpts(title="温度分布图",
+                                      title_textstyle_opts=opts.TextStyleOpts(color="white")
+                                      ),
         )
         return geo
+
+
+class province_scroe:
+
+    def __init__(self, csv_path):
+        self.score = pd.read_csv('{}/data/score.csv'.format(csv_path)).set_index("城市")  # 读取分数信息
+
+    def get_score(self, city):
+        return int(self.score["分数"][city])
+
+
 
 

@@ -59,7 +59,7 @@
             <div id="aleftboxtbott"  class="aleftboxtbott_contr"> {{ chart1 | safe }}</div>
           </div>
             <div class="arightboxbott"><h2 class="tith2 ">假期出游推荐指数</h2>
-                    <div style="text-align: center; margin-top: 15%; font-size: 100px">99分</div>
+                    <div id="score" style="text-align: center; margin-top: 15%; font-size: 100px">{{scroe}}分</div>
               <div id="aleftboxtmiddr" class="arightboxbottcont2"></div>
             </div>
         </div>
@@ -74,7 +74,7 @@
 
     var city = "上海";
 
-    let charts = $(".chart-container");
+    var charts = $(".chart-container");
     charts.eq(0).on("click",function (params) {
 
         city = params.currentTarget.textContent.split(" : ")[0];
@@ -87,6 +87,7 @@
                 $("#chart3_title").html(data.city);
                 $("#chart2").html(data.chart);
                 $("#chart3").html(data.chart3);
+                $("#score").html(data.score+"分");
             }
         )
     });
@@ -125,6 +126,23 @@
             "/getMap",
             function (data) {
                 $("#china_map").html(data.chart);
+                charts = $(".chart-container");
+                charts.eq(0).on("click",function (params) {
+
+                    city = params.currentTarget.textContent.split(" : ")[0];
+
+                    $.post(
+                        "/getChart2ByCity",
+                        {"city":city},
+                        function (data) {
+                            $("#chart2_title").html(data.city);
+                            $("#chart3_title").html(data.city);
+                            $("#chart2").html(data.chart);
+                            $("#chart3").html(data.chart3);
+                            $("#score").html(data.score+"分");
+                        }
+                    )
+                });
             }
         )
     }
