@@ -94,8 +94,10 @@ class province_rt:
 
             legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
             # title_opts=opts.TitleOpts(title="中秋节省会城市降雨和温度情况", title_textstyle_opts=opts.TextStyleOpts
-            xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=-30, color="white"), is_show=True),
+            xaxis_opts=opts.AxisOpts(name="省份", name_textstyle_opts=opts.TextStyleOpts(color="white"),  axislabel_opts=opts.LabelOpts(rotate=-30, color="white"), is_show=True),
             yaxis_opts=opts.AxisOpts(
+                name="温度/降水",
+                name_textstyle_opts=opts.TextStyleOpts(color="white"),
                 axistick_opts=opts.AxisTickOpts(is_show=False),
                 axisline_opts=opts.AxisLineOpts(
                     linestyle_opts=opts.LineStyleOpts(opacity=0)
@@ -207,7 +209,6 @@ class province_rt2:
         line.set_series_opts(label_opts=opts.LabelOpts(is_show=True, color="orange"))
 
         bar.overlap(line)
-        # line.overlap(bar)
 
         return bar
 
@@ -287,29 +288,52 @@ class province_rt3:
         return line
 
 
-class province_p1:
+class province_p:
 
     def __init__(self, csv_path):
 
         self.passenger = pd.read_csv('{}/data/passenger_flow.csv'.format(csv_path)).set_index("城市")  # 读取省会信息
 
 
-    def render(self, city, day="周四（12日）"):
+    def render(self, city):
 
-        pie = Pie(init_opts=opts.InitOpts(width="85%", height="85%"))
-        pie.add("",
-                [
-                    ("景区客流", self.passenger[day][city]),
-                    ("景区容量", round(1-(self.passenger[day][city]), 2))
-                ]
+        days = self.passenger.loc[city, "周四（12日）":].index
+        days = [i[3:6] for i in days]
+
+        NUM_LIST = self.passenger.loc[city, "周四（12日）":].values
+        NUM_LIST = [float(NUM) for NUM in NUM_LIST]
+
+        MAX_NUM_LIST = [round(1-NUM, 2) for NUM in NUM_LIST]
+
+        bar = Bar(init_opts=opts.InitOpts(width="100%", height="92%", bg_color="#12406d"))
+
+        bar.add_xaxis(days)
+
+        bar.add_yaxis("景区客流", NUM_LIST, stack='stack1', itemstyle_opts=opts.ItemStyleOpts(color='#FF6347'),)
+        bar.add_yaxis("景区容量", MAX_NUM_LIST, stack='stack1', itemstyle_opts=opts.ItemStyleOpts(color='orange'),)
+
+        bar.set_series_opts(label_opts=opts.LabelOpts(is_show=True, color="white"))
+        bar.set_global_opts(
+
+            legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
+            xaxis_opts=opts.AxisOpts(name='日期', name_textstyle_opts=opts.TextStyleOpts(color="orange"),
+                                     axislabel_opts=opts.LabelOpts(rotate=-30, color="white"),
+                                     is_show=True),
+            yaxis_opts=opts.AxisOpts(
+                name='客流占比',
+                name_textstyle_opts=opts.TextStyleOpts(color="orange"),
+                axistick_opts=opts.AxisTickOpts(is_show=False),
+                axisline_opts=opts.AxisLineOpts(
+                    linestyle_opts=opts.LineStyleOpts(opacity=0)
+                ),
+                axislabel_opts=opts.LabelOpts(color="white")
+            )
+
         )
-        pie.set_colors(["#FF6347", "orange"])
-        pie.set_global_opts(title_opts=opts.TitleOpts(title=city+"\n"+day,
-                            title_textstyle_opts=opts.TextStyleOpts(color="white",font_size=15)),
-                            legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")))
-        pie.set_series_opts(label_opts=opts.LabelOpts(formatter="{b}"))
-        return pie
 
+
+
+        return bar
 
 
 

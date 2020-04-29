@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from Tool import ChartTool, Analysis, Enumeration
+from Tool import ChartTool, Analysis
 
 import os
 app = Flask(__name__)
@@ -13,11 +13,9 @@ def index():
     china_map = ChartTool.geo()
     chart1 = Analysis.province_rt2(project_path)
     chart2 = Analysis.province_rt3(project_path)
-    chart3 = Analysis.province_p1(project_path)
+    chart3 = Analysis.province_p(project_path)
     city = "上海"
-    days = Enumeration.days
     return render_template("index.html",
-                           days=days,
                            city=city,
                            map=china_map.render_embed(),
                            chart1=chart1.render().render_embed(),
@@ -32,7 +30,7 @@ def getChartByCity():
     project_path = os.path.dirname(os.path.abspath(__file__))
     city = request.form["city"]
     chart = Analysis.province_rt3(project_path)
-    chart3 = Analysis.province_p1(project_path)
+    chart3 = Analysis.province_p(project_path)
     data = {}
     data["city"] = city + "中秋节前后降水与温度"
     data["chart"] = chart.render(city).render_embed()
@@ -44,10 +42,10 @@ def getChartByCity():
 def getChart3ByCity():
     project_path = os.path.dirname(os.path.abspath(__file__))
     city = request.form["city"]
-    day = request.form["day"]
-    chart = Analysis.province_p1(project_path)
+    chart = Analysis.province_p(project_path)
     data = {}
-    data["chart"] = chart.render(city, day).render_embed()
+    data["city"] = city + "中秋节前后降水与温度"
+    data["chart"] = chart.render(city).render_embed()
     return jsonify(data)
 
 

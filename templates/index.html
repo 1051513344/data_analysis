@@ -38,15 +38,13 @@
             <!--  amiddboxttop end-->
                 <div class="amidd_bott">
                   <div class="amiddboxtbott1 fl" >
-                    <h2 class="tith2 pt1" id="chart2_title">{{ city }}xx节前后降水与温度</h2>
+                    <h2 class="tith2 pt1" id="chart2_title">{{ city }}中秋节前后降水与温度</h2>
                       <div class="lefttoday_tit"><p class="fr" id="timer"></p></div>
                     <div id="chart2" class="amiddboxtbott1content2" >{{ chart2 | safe }}</div>
                   </div>
 
-                <div class="amiddboxtbott2 fl"><h2 class="tith2 pt1">景区客流情况</h2>
+                <div class="amiddboxtbott2 fl"><h2 class="tith2 pt1" id="chart3_title">{{ city }}中秋节前后景区客流情况</h2>
                     <div id="arightboxbott" class="amiddboxtbott2content">
-                        {% for day in days[:4] %}<a onclick="changeChart3Day('{{ day }}')" class="btn">{{ day }}</a>{% endfor %}<br/>
-                        {% for day in days[4:] %}<a onclick="changeChart3Day('{{ day }}')" class="btn">{{ day }}</a>{% endfor %}
                         <span id="chart3">
                             {{ chart3 | safe }}
                         </span>
@@ -86,16 +84,17 @@
             {"city":city},
             function (data) {
                 $("#chart2_title").html(data.city);
+                $("#chart3_title").html(data.city);
                 $("#chart2").html(data.chart);
                 $("#chart3").html(data.chart3);
             }
         )
     });
 
-    function changeChart3Day(day) {
+    function changeChart3Day() {
         $.post(
             "/getChart3ByCity",
-            {"city":city, "day":day},
+            {"city":city},
             function (data) {
                 $("#chart3").html(data.chart);
             }
