@@ -360,7 +360,6 @@ class province_hm1:
         weather_data = map(self.check_weather, weather_info['wea'].values.tolist())
         weather_data_list = list(weather_data)
 
-        print([list(z) for z in zip(provincial_list, weather_data_list)])
 
         geo = Geo(init_opts=opts.InitOpts(width="100%", height="92%", bg_color="#12406d"))
         geo.add_schema(maptype='china')
@@ -376,4 +375,67 @@ class province_hm1:
         )
 
         return geo
+
+
+class province_hm2:
+
+    def __init__(self, csv_path):
+        self.provincial = pd.read_csv('{}/data/provincial_capital.csv'.format(csv_path))  # 读取省会信息
+        self.weather = pd.read_csv("{}/data/weather_data.csv".format(csv_path))  # 读取天气信息
+
+    def trans_tem(self, tem):
+        # 获取温度信息
+        rege = r'-?(\d+)℃/-?(\d+)℃'
+        tmp_tem = re.match(rege, tem)
+        mid_tem = (int(tmp_tem.group(1)) + int(tmp_tem.group(2))) / 2
+        return mid_tem
+
+    # 转换降水信息
+    def check_weather(self, wea):
+        # 转换天气变量，数值越多，说明降水概率越大
+        weather_dict = {
+            "snow": 100,
+            "rain": 80,
+            "cloud": 50,
+            "overcast": 60,
+            "sun": 20
+        }
+        if wea[-1:] == '晴':
+            wea = weather_dict['sun']
+        elif wea[-1:] == '云':
+            wea = weather_dict['cloud']
+        elif wea[-1:] == '雨':
+            wea = weather_dict['rain']
+        elif wea[-1:] == '阴':
+            wea = weather_dict['overcast']
+        return wea
+
+    def render(self):
+
+        # 降水分布图
+        provincial_list = self.provincial['provincial'].values.tolist()
+
+        # 按照城市分组
+        wea_group = self.weather.groupby('city').apply(lambda x: x[:])
+        # 提取当天天气信息
+        weather_info = wea_group[wea_group['time'] == '周五（13日）']
+
+        # 获取降水和温度信息
+        tem_data = map(self.trans_tem, weather_info['tem'].values.tolist())
+        tem_data = list(tem_data)
+
+        geo = Geo(init_opts=opts.InitOpts(width="100%", height="92%", bg_color="#12406d"))
+        geo.add_schema(maptype='china')
+        geo.add(
+            "温度分布图",
+            [list(z) for z in zip(provincial_list, tem_data)],
+            type_=ChartType.HEATMAP
+        )
+        geo.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+        geo.set_global_opts(
+            visualmap_opts=opts.VisualMapOpts(max_=30),
+            title_opts=opts.TitleOpts(title="Geo-HeatMap"),
+        )
+        return geo
+
 

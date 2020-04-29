@@ -28,7 +28,8 @@
               <h2 class="tith2 pt1">中国省会城市地图</h2>
                 <div class="hot_map" id="topmap">
                     <a onclick="getMapOne()" class="btn">降水分布图</a>&nbsp;&nbsp;
-                    <a onclick="getMapTwo()" class="btn">温度分布图</a>
+                    <a onclick="getMapTwo()" class="btn">温度分布图</a>&nbsp;&nbsp;
+                    <a onclick="getMap()" class="btn">中国省会城市地图</a>&nbsp;&nbsp;
                     <span id="china_map">
                         {{ map | safe }}
                     </span>
@@ -118,6 +119,17 @@
             }
         )
     }
+
+
+    function getMap() {
+        $.post(
+            "/getMap",
+            function (data) {
+                $("#china_map").html(data.chart);
+            }
+        )
+    }
+
 
 </script>
 </body>

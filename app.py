@@ -59,13 +59,21 @@ def getMapOne():
     data["chart"] = chart.render().render_embed()
     return jsonify(data)
 
-# @app.route('/getMapTwo', methods=['POST'])
-# def getMapTwo():
-#     project_path = os.path.dirname(os.path.abspath(__file__))
-#     chart = Analysis.province_hm1(project_path)
-#     data = {}
-#     data["chart"] = chart.render().render_embed()
-#     return jsonify(data)
+@app.route('/getMapTwo', methods=['POST'])
+def getMapTwo():
+    project_path = os.path.dirname(os.path.abspath(__file__))
+    chart = Analysis.province_hm2(project_path)
+    data = {}
+    data["chart"] = chart.render().render_embed()
+    return jsonify(data)
+
+
+@app.route('/getMap', methods=['POST'])
+def getMap():
+    china_map = ChartTool.geo()
+    data = {}
+    data["chart"] = china_map.render_embed()
+    return jsonify(data)
 
 
 
