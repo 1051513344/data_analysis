@@ -35,7 +35,8 @@ def getChartByCity():
     chart3 = Analysis.province_p(project_path)
     score = Analysis.province_scroe(project_path)
     data = {}
-    data["city"] = city + "中秋节前后降水与温度"
+    data["city1"] = city + "中秋节前后降水与温度"
+    data["city2"] = city + "中秋节前后客流情况"
     data["score"] = score.get_score(city)
     data["chart"] = chart.render(city).render_embed()
     data["chart3"] = chart3.render(city).render_embed()

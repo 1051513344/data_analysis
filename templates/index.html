@@ -83,8 +83,8 @@
             "/getChart2ByCity",
             {"city":city},
             function (data) {
-                $("#chart2_title").html(data.city);
-                $("#chart3_title").html(data.city);
+                $("#chart2_title").html(data.city1);
+                $("#chart3_title").html(data.city2);
                 $("#chart2").html(data.chart);
                 $("#chart3").html(data.chart3);
                 $("#score").html(data.score+"分");
