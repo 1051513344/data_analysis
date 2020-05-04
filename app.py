@@ -48,7 +48,7 @@ def getChart3ByCity():
     city = request.form["city"]
     chart = Analysis.province_p(project_path)
     data = {}
-    data["city"] = city + "中秋节前后降水与温度"
+    data["city"] = city + "中秋节前后客流情况"
     data["chart"] = chart.render(city).render_embed()
     return jsonify(data)
 
