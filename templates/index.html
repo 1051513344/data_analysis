@@ -92,16 +92,6 @@
         )
     });
 
-    function changeChart3Day() {
-        $.post(
-            "/getChart3ByCity",
-            {"city":city},
-            function (data) {
-                $("#chart3").html(data.chart);
-            }
-        )
-    }
-
     function getMapOne() {
         $.post(
             "/getMapOne",

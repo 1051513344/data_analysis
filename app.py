@@ -43,17 +43,6 @@ def getChartByCity():
     return jsonify(data)
 
 
-@app.route('/getChart3ByCity', methods=['POST'])
-def getChart3ByCity():
-    project_path = os.path.dirname(os.path.abspath(__file__))
-    city = request.form["city"]
-    chart = Analysis.province_passer(project_path)
-    data = {}
-    data["city"] = city + "中秋节前后客流情况"
-    data["chart"] = chart.render(city).render_embed()
-    return jsonify(data)
-
-
 @app.route('/getMapOne', methods=['POST'])
 def getMapOne():
     project_path = os.path.dirname(os.path.abspath(__file__))
