@@ -187,7 +187,7 @@ class province_rt2:
                 axisline_opts=opts.AxisLineOpts(
                     linestyle_opts=opts.LineStyleOpts(opacity=0)
                 ),
-                axislabel_opts=opts.LabelOpts(formatter="{value}%\n降水概率", color="white", font_size=10)
+                axislabel_opts=opts.LabelOpts(formatter="{value}%\n降水量", color="white", font_size=10)
             ),
             datazoom_opts=opts.DataZoomOpts()
         )
