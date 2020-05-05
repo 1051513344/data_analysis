@@ -4,7 +4,7 @@ from pyecharts.globals import SymbolType, ChartType
 import pandas as pd
 from pyecharts.commons.utils import JsCode
 import re
-
+from Tool.Predict import predict_passer
 
 
 
@@ -102,7 +102,7 @@ class province_rt:
                 axisline_opts=opts.AxisLineOpts(
                     linestyle_opts=opts.LineStyleOpts(opacity=0)
                 ),
-                axislabel_opts=opts.LabelOpts(formatter="{value}% 降水概率", color="white")
+                axislabel_opts=opts.LabelOpts(formatter="{value}% 降水量", color="white")
             ),
             datazoom_opts=opts.DataZoomOpts(),
 
@@ -217,59 +217,29 @@ class province_rt2:
 class province_rt3:
 
     def __init__(self, csv_path):
-        self.provincial = pd.read_csv('{}/data/provincial_capital.csv'.format(csv_path))  # 读取省会信息
-        self.china_city_code = pd.read_csv('{}/data/china-city-list.csv'.format(csv_path))  # 读取城市 id 信息
-        self.weather = pd.read_csv("{}/data/weather_data.csv".format(csv_path))  # 读取天气信息
 
-    def trans_tem(self, tem):
-        # 获取温度信息
-        rege = r'-?(\d+)℃/-?(\d+)℃'
-        tmp_tem = re.match(rege, tem)
-        mid_tem = (int(tmp_tem.group(1)) + int(tmp_tem.group(2))) / 2
-        return mid_tem
-
-    # 转换降水信息
-    def check_weather(self, wea):
-        # 转换天气变量，数值越多，说明降水概率越大
-        weather_dict = {
-            "snow": 100,
-            "rain": 80,
-            "cloud": 50,
-            "overcast": 60,
-            "sun": 20
-        }
-        if wea[-1:] == '晴':
-            wea = weather_dict['sun']
-        elif wea[-1:] == '云':
-            wea = weather_dict['cloud']
-        elif wea[-1:] == '雨':
-            wea = weather_dict['rain']
-        elif wea[-1:] == '阴':
-            wea = weather_dict['overcast']
-        return wea
-
-    def render(self, ctiy):
+        self.temperature = pd.read_csv("{}/data/all_temperature.csv".format(csv_path)).set_index("城市")  # 读取温度信息
+        self.weather = pd.read_csv("{}/data/all_weather.csv".format(csv_path)).set_index("城市")  # 读取天气信息
 
 
-        # 几大城市天气情况
 
-        city = self.weather[self.weather['city'] == ctiy]
+    def render(self, city):
 
-        time_shanghai = city['time'].values.tolist()
-        wea_shanghai = city['wea'].values.tolist()
-        wea_list_shanghai = list(map(self.check_weather, wea_shanghai))
-        tem_shanghai = city['tem'].values.tolist()
-        tem_list_shanghai = list(map(self.trans_tem, tem_shanghai))
+        days = ["周五（6日）","周六（7日）","周日（8日）","周一（9日）","周二（10日）","周三（11日）","周四（12日）","周五（13日）"]
+        temps = self.temperature.loc[city, "周五（6日）":]
+        wea = self.weather.loc[city, "周五（6日）":]
+
+
         line = Line(init_opts=opts.InitOpts(width="100%", height="100%", bg_color="#12406d"))
-        line.add_xaxis(time_shanghai)
-        line.add_yaxis("降水概率", wea_list_shanghai, is_smooth=True,
-                       markpoint_opts=opts.MarkPointOpts(data=[opts.MarkPointItem(type_="min")]),
-                       itemstyle_opts=opts.ItemStyleOpts(color="#FF6347")
-                       )
-
-        line.add_yaxis("温度", tem_list_shanghai,
+        line.add_xaxis(days)
+        line.add_yaxis("降水量", wea, is_smooth=True,
                        markpoint_opts=opts.MarkPointOpts(data=[opts.MarkPointItem(type_="min")]),
                        itemstyle_opts=opts.ItemStyleOpts(color="#00BFFF")
+                       )
+
+        line.add_yaxis("温度", temps,
+                       markpoint_opts=opts.MarkPointOpts(data=[opts.MarkPointItem(type_="min")]),
+                       itemstyle_opts=opts.ItemStyleOpts(color="#FF6347")
                        )
         line.set_global_opts(
             legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
@@ -288,54 +258,27 @@ class province_rt3:
         return line
 
 
-class province_p:
+class province_passer:
 
     def __init__(self, csv_path):
 
-        self.passenger = pd.read_csv('{}/data/passenger_flow.csv'.format(csv_path)).set_index("城市")  # 读取省会信息
-
+        self.temp = pd.read_csv("{}/data/all_temperature.csv".format(csv_path)).set_index("城市")
+        self.wea = pd.read_csv("{}/data/all_weather.csv".format(csv_path)).set_index("城市")
+        self.passer = pd.read_csv("{}/data/all_passer.csv".format(csv_path)).set_index("城市")
 
     def render(self, city):
 
-        days = self.passenger.loc[city, "周四（12日）":].index
-        days = [i[3:6] for i in days]
+        self.temp = self.temp.loc[city, "周五（6日）":]
+        self.wea = self.wea.loc[city, "周五（6日）":]
+        self.passer = self.passer.loc[city, "周五（6日）":]
 
-        NUM_LIST = self.passenger.loc[city, "周四（12日）":].values
-        NUM_LIST = [float(NUM) for NUM in NUM_LIST]
+        pie = Pie(init_opts=opts.InitOpts(width="100%", height="100%"))
+        pie.add("", [("景区客流", predict_passer(self.temp, self.wea, self.passer)), ("景区容量", 1 - predict_passer(self.temp, self.wea, self.passer))])
+        pie.set_colors(["#FF6347", "orange"])
+        pie.set_global_opts(legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")))
+        pie.set_series_opts(label_opts=opts.LabelOpts(formatter="{b}"))
 
-        MAX_NUM_LIST = [round(1-NUM, 2) for NUM in NUM_LIST]
-
-        bar = Bar(init_opts=opts.InitOpts(width="100%", height="92%", bg_color="#12406d"))
-
-        bar.add_xaxis(days)
-
-        bar.add_yaxis("景区客流", NUM_LIST, stack='stack1', itemstyle_opts=opts.ItemStyleOpts(color='#FF6347'),)
-        bar.add_yaxis("景区容量", MAX_NUM_LIST, stack='stack1', itemstyle_opts=opts.ItemStyleOpts(color='orange'),)
-
-        bar.set_series_opts(label_opts=opts.LabelOpts(is_show=True, color="white"))
-        bar.set_global_opts(
-
-            legend_opts=opts.LegendOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
-            xaxis_opts=opts.AxisOpts(name='日期', name_textstyle_opts=opts.TextStyleOpts(color="orange"),
-                                     axislabel_opts=opts.LabelOpts(rotate=-30, color="white"),
-                                     is_show=True),
-            yaxis_opts=opts.AxisOpts(
-                name='客流占比',
-                name_textstyle_opts=opts.TextStyleOpts(color="orange"),
-                axistick_opts=opts.AxisTickOpts(is_show=False),
-                axisline_opts=opts.AxisLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(opacity=0)
-                ),
-                axislabel_opts=opts.LabelOpts(color="white")
-            )
-
-        )
-
-
-
-        return bar
-
-
+        return pie
 
 class province_hm1:
 

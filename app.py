@@ -13,7 +13,7 @@ def index():
     china_map = ChartTool.geo()
     chart1 = Analysis.province_rt2(project_path)
     chart2 = Analysis.province_rt3(project_path)
-    chart3 = Analysis.province_p(project_path)
+    chart3 = Analysis.province_passer(project_path)
     score = Analysis.province_scroe(project_path)
     city = "上海"
     return render_template("index.html",
@@ -32,11 +32,11 @@ def getChartByCity():
     project_path = os.path.dirname(os.path.abspath(__file__))
     city = request.form["city"]
     chart = Analysis.province_rt3(project_path)
-    chart3 = Analysis.province_p(project_path)
+    chart3 = Analysis.province_passer(project_path)
     score = Analysis.province_scroe(project_path)
     data = {}
     data["city1"] = city + "中秋节前后降水与温度"
-    data["city2"] = city + "中秋节前后客流情况"
+    data["city2"] = city + "景区明日客流情况预测"
     data["score"] = score.get_score(city)
     data["chart"] = chart.render(city).render_embed()
     data["chart3"] = chart3.render(city).render_embed()
@@ -47,7 +47,7 @@ def getChartByCity():
 def getChart3ByCity():
     project_path = os.path.dirname(os.path.abspath(__file__))
     city = request.form["city"]
-    chart = Analysis.province_p(project_path)
+    chart = Analysis.province_passer(project_path)
     data = {}
     data["city"] = city + "中秋节前后客流情况"
     data["chart"] = chart.render(city).render_embed()
